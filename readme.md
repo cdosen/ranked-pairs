@@ -50,7 +50,8 @@ Credit for the code used to email voters goes to Jordan Bonilla. The security an
     - Get the URL from the pre-fill link such that values appended to the URL automatically fill in "voter ID". You might need to "inspect element" to do this on your browser. Make sure you are pretending to fill out a ballot when doing this.
     - This URL looks something like: https://docs.google.com/forms/d/xxx...xxx/viewform?entry.xxx...xxx=
     - Suggested survey options: shuffle row order, disable all confirmation page links
-    - hide show summary of responses.
+    - hide show summary of responses
+    - Make sure every row is required to have a value. A Null value is not currently supported
 
 
 # License
