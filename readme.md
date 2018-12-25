@@ -52,6 +52,7 @@ Credit for the code used to email voters goes to Jordan Bonilla. The security an
     - Suggested survey options: shuffle row order, disable all confirmation page links
     - hide show summary of responses
     - Make sure every row is required to have a value. A Null value is not currently supported
+    - In the voter ID question, require response to be a number greater than 999.
 
 
 # License
