@@ -162,12 +162,7 @@ class Votes:
             self.victor = "Tie"
 
     def orderPairs(self):
-        self.pairs = sortPairs(self.pairs)
-        pairNoDups = []
-        for i in range(len(self.pairs)):
-            if i % 2 == 0:
-                pairNoDups.append(self.pairs[i])
-        self.sortedPairs = pairNoDups
+        self.sortedPairs = sortPairs(self.pairs)
 
     def createPairs(self):
         '''
@@ -191,8 +186,9 @@ class Votes:
                         oppScore = self.voteData[opponent][person]
                         if score > oppScore:
                             self.pairs.append([person, opponent, score - oppScore, oppScore])
-                        else:
-                            self.pairs.append([opponent, person, oppScore - score, score])
+                        elif score == oppScore:
+                            msg = score + " People voted for both "+person+" and "+opponent
+                            self.errorLog.append(msg)
                     except:
                         msg = "No comparison in data between "+person+" and "+opponent
                         self.errorLog.append(msg)
@@ -270,7 +266,5 @@ if __name__ == "__main__":
         candList = candList.strip().split(',')
         for i in range(len(candList)):
             candList[i] = candList[i].strip()
-    print(candList)
-    print(header)
     election = Votes()
     election.process(data,header,candList,filename)

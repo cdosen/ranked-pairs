@@ -1,3 +1,4 @@
+import sys
 # If a voter ID is invalid, overwrite it with an error message and blacklist the vote
 def identify_invalid_votes(votes, ids):
 
@@ -59,13 +60,13 @@ if __name__ == "__main__":
         usage()
     with open(data, 'r') as votecsv:
         votes = votecsv.readline()
-        votes = [votes.strip().split(',')]
+        votes = [votes.strip().replace('\"', '').strip().split(',')]
         line = votecsv.readline()
-        line = line.strip().split(',')
+        line = line.strip().replace('\"', '').strip().split(',')
         while line != ['']:
             votes.append(line)
             line = votecsv.readline()
-            line = line.strip().split(',')
+            line = line.strip().replace('\"', '').split(',')
     try:
         idFile = sys.argv[2]
         voteFile = sys.argv[3]
