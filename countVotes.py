@@ -1,7 +1,13 @@
 import sys
 import csv
 
-
+def ballotToInt(ballot):
+    for voter in range(len(ballot)):
+        for cand in range(len(ballot[voter])):
+            try:
+                ballot[voter][cand] = int(ballot[voter][cand].strip(' \'[]'))
+            except ValueError:
+                ballot[voter][cand] = 0
 
 
 def makesCycle(newEdge, graph, visited):
@@ -192,19 +198,21 @@ class Votes:
                     except:
                         msg = "No comparison in data between "+person+" and "+opponent
                         self.errorLog.append(msg)
+
     def importData(self, rawData, header):
         for person in header:
             self.voteData[person] = {}
             for opponent in header:
                 self.voteData[person][opponent] = 0
+        ballotToInt(rawData)
         for voter in range(len(rawData)):
-            for person in range(1, len(rawData[voter])):
-                for opponent in range(1, len(rawData[voter])):
-                    if int(rawData[voter][person].strip(' \'[]')) > int(rawData[voter][opponent].strip(' \'[]')):
+            for person in range(len(rawData[voter])):
+                for opponent in range(len(rawData[voter])):
+                    if rawData[voter][person] > rawData[voter][opponent]:
                         self.voteData[header[person]][header[opponent]] += 1
-                    elif int(rawData[voter][person].strip(' \'[]')) < int(rawData[voter][opponent].strip(' \'[]')):
+                    elif rawData[voter][person] < rawData[voter][opponent]:
                         continue
-                    elif int(rawData[voter][person].strip(' \'[]')) != 0:
+                    elif rawData[voter][person] != 0:
                         self.voteData[header[person]][header[opponent]] += 1
 
     def importCand(self, candList):

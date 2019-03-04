@@ -1,7 +1,7 @@
 ## Online Ranked Pairs Voting Programs
 
 # Citations
-Credit for the code used to email voters goes to Jordan Bonilla. The security and anonymity section of this readme was written by him for a similar project.
+Credit for the code used to emailVoters goes to Jordan Bonilla. The security and anonymity section of this readme was written by him for a similar project.
 
 # Usage Instructions:
 
@@ -47,12 +47,12 @@ Credit for the code used to email voters goes to Jordan Bonilla. The security an
     - For every candidate, make a new row with their name
     - Columns are ints that go from 0 to num_candidates with 1 being the worst, 0 abstain
     - Last question must be a short answer question that holds voter ID (it doesn't have to be the last question, it just has to be a question)
-    - Get the URL from the pre-fill link such that values appended to the URL automatically fill in "voter ID". You might need to "inspect element" to do this on your browser. Make sure you are pretending to fill out a ballot when doing this.
+    - Get the URL from the pre-fill link such that values appended to the URL automatically fill in "voter ID". You will need to "inspect element" to do this on your browser. Make sure you are pretending to fill out a ballot when doing this. Inspect element on the box, and look for an attribute in the code that has "entry.xxx" where xxx is some number. Add that to the url and make sure the url looks like below:
     - This URL looks something like: https://docs.google.com/forms/d/xxx...xxx/viewform?entry.xxx...xxx=
+    - I recommend testing this url by adding the letter a at the end of it, and then going to that page when not logged in to your google account. If you see the letter a in the box pre-filled out, it worked. Just make sure to remove the letter a from the url before sending it out.
     - Suggested survey options: shuffle row order, disable all confirmation page links
     - hide show summary of responses
-    - Make sure every row is required to have a value. A Null value is not currently supported
-    - In the voter ID question, require response to be a number greater than 999.
+    - the voter id input box must have the phrase "voter id" contained within the title of it. it is not case sensitive
 
 
 # License

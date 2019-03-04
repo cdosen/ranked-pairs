@@ -6,12 +6,10 @@ def identify_invalid_votes(votes, ids):
     encountered_IDs = {}
     validRows = []
     idCol = len(votes[0])
-    for j in range(1, len(votes[0])):
-        for k in range(1, len(votes)):
-            #ids have to be at least 4 digits, and there will never be >999 candidates
-            if int(votes[k][j]) > 999:
-                idCol = j
-                break
+    for j in range(len(votes[0])):
+        if 'VOTER ID' in votes[0][j].upper():
+            idCol = j
+            break
     for i in reversed(range(1, len(votes))):
         if votes[i][idCol] == '':
             votes[i][idCol] = "INVALID VOTE! EMPTY ID: " + votes[i][idCol]
