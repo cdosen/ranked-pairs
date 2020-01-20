@@ -1,52 +1,53 @@
 import sys
+import ast
 # If a voter ID is invalid, overwrite it with an error message and blacklist the vote
 def identify_invalid_votes(votes, ids):
 
 
-    encountered_IDs = {}
+    encountered_IDs = set()
     validRows = []
-    idCol = len(votes[0])
+    idCol = -1
     for j in range(len(votes[0])):
         if 'VOTER ID' in votes[0][j].upper():
             idCol = j
             break
     for i in reversed(range(1, len(votes))):
-        if votes[i][idCol] == '':
-            votes[i][idCol] = "INVALID VOTE! EMPTY ID: " + votes[i][idCol]
-        elif votes[i][idCol] not in ids:
-            votes[i][idCol]=  "INVALID VOTE! UNAUTHORIZED ID: " + votes[i][idCol]
-        elif votes[i][idCol] in encountered_IDs:
-            votes[i][idCol] =  "INVALID VOTE! REPEATED ID: " + votes[i][idCol]
-        else:
-            encountered_IDs[votes[i][idCol]] = True
-            validRows.append(i)
+        try:
+            if votes[i][idCol] not in ids:
+                votes[i][idCol]=  "INVALID VOTE! UNAUTHORIZED ID: " + str(votes[i][idCol])
+            elif votes[i][idCol] in encountered_IDs:
+                votes[i][idCol] =  "INVALID VOTE! REPEATED ID: " + str(votes[i][idCol])
+            else:
+                encountered_IDs.add(votes[i][idCol])
+                validRows.append(i)
+        except:
+            votes[i].append("INVALID VOTE! EMPTY ID")
     return validRows
 
 
 def exportValidVotes(filename, votes, rows):
     with open(filename, 'w') as data:
-        data.write(str(votes[0]).strip() + '\n')
+        print(votes[0], file=data)
         for row in rows:
-            data.write(str(votes[row]).strip() + '\n')
+            print(votes[row], file=data)
 
 def exportAllVotes(filename, votes):
     with open(filename, 'w') as data:
         for row in range(len(votes)):
-            data.write(str(votes[row]).strip() + '\n')
+            print(votes[row], file=data)
 
 def getIDs(filename):
-    ids = []
+    ids = set()
     with open(filename, 'r') as data:
         while True:
-            id = data.readline().strip()
-            print(id)
+            id = data.readline()
             if id == '':
                 break
-            ids.append(id)
+            ids.add(ast.literal_eval(id))
     return ids
 
 def usage():
-    print("usage: \nverifyVotes.py rawVoteData IDFIle ExportName")
+    print("usage: \nverifyVotes.py rawVoteData IDFIle")
     exit(2)
 
 
@@ -57,21 +58,20 @@ if __name__ == "__main__":
     except:
         usage()
     with open(data, 'r') as votecsv:
-        votes = votecsv.readline()
-        votes = [votes.strip().replace('\"', '').strip().split(',')]
-        line = votecsv.readline()
-        line = line.strip().replace('\"', '').strip().split(',')
-        while line != ['']:
+        votes = '[\'' + votecsv.readline().strip().replace(',','\',\'')
+        votes = votes + '\']'
+        votes = [ast.literal_eval(votes)]
+        line = ast.literal_eval('['+votecsv.readline().replace(',,',',0,').strip()+']')
+        while line != []:
             votes.append(line)
-            line = votecsv.readline()
-            line = line.strip().replace('\"', '').split(',')
+            line = ast.literal_eval('['+votecsv.readline().replace(',,',',0,').strip()+']')
     try:
         idFile = sys.argv[2]
-        voteFile = sys.argv[3]
     except:
         usage()
+
     ids = getIDs(idFile)
     rows = identify_invalid_votes(votes, ids)
 
-    exportValidVotes(voteFile, votes, rows)
-    exportAllVotes(data, votes)
+    exportValidVotes('VALID_' + data, votes, rows)
+    exportAllVotes('PROCESSED_' + data, votes)

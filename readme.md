@@ -13,11 +13,11 @@ Credit for the code used to emailVoters goes to Jordan Bonilla. The security and
 
 4. Let people vote. Also delete the sent folder of your email address for the purpose of anonymity.
 
-5. run verifyVotes.py. include as commandline args a downloaded copy of the output of the form in .csv format, the file containing the IDs from step 3, and the name of a file you want the valid votes exported to. These files should be in that order.
+5. run verifyVotes.py. include as commandline args a downloaded copy of the output of the form in .csv format, the file containing the IDs from step 3. These files should be in that order.
 
-6. make a file that is just the headers of the result from step 5. Then delete all entries from that new file that are not candidates in the current election.
+6. make a file that is just the headers of the csv file labelled PROCESSED. Then delete all entries from that new file that are not candidates in the current election.
 
-7. run countVotes.py. Include as commandline args the file from step 5, then the file from step 6. you may include --file [insert name for an output text file here], if you want a full report of the process, as opposed to just the result.
+7. run countVotes.py. Include as commandline args the file labelled as VALID, then the file from step 6. you may include --file [insert name for an output text file here], if you want a full report of the process, as opposed to just the result.
 
 
 # Security and anonymity:
@@ -46,13 +46,16 @@ Credit for the code used to emailVoters goes to Jordan Bonilla. The security and
     - The survey questions must be multiple choice grids, allow for multiple responses per column
     - For every candidate, make a new row with their name
     - Columns are ints that go from 0 to num_candidates with 1 being the worst, 0 abstain
-    - Last question must be a short answer question that holds voter ID (it doesn't have to be the last question, it just has to be a question)
+    - Last question must be a short answer question that holds voter ID (it doesn't have to be the last question, it just has to be a question, but it should be required to be filled out, especially if it isn't the last question). You should restrict the possible answers to this question to be numbers.
     - Get the URL from the pre-fill link such that values appended to the URL automatically fill in "voter ID". You will need to "inspect element" to do this on your browser. Make sure you are pretending to fill out a ballot when doing this. Inspect element on the box, and look for an attribute in the code that has "entry.xxx" where xxx is some number. Add that to the url and make sure the url looks like below:
     - This URL looks something like: https://docs.google.com/forms/d/xxx...xxx/viewform?entry.xxx...xxx=
     - I recommend testing this url by adding the letter a at the end of it, and then going to that page when not logged in to your google account. If you see the letter a in the box pre-filled out, it worked. Just make sure to remove the letter a from the url before sending it out.
     - Suggested survey options: shuffle row order, disable all confirmation page links
     - hide show summary of responses
     - the voter id input box must have the phrase "voter id" contained within the title of it. it is not case sensitive
+    - Do not include backslashes in any text on the form.
+    - Do not allow users to edit their responses. This can cause problems if they fill it out once, change their minds and fill out again (to change their vote) (but on a different account or other plausible scenario), and then change their mind again and edit the first vote.
+    - After the form is set up, go to the linked response spreadsheet (create it if it doesn't already exist). Add a new sheet, and make sure it has more rows and columns than you could possibly need to hold all the data. In each cell of this new sheet, type "=" and then navigate to the original sheet and click on the cell in the corresponding row, but one column to the right. Use this copy sheet to download the results. This will prevent the timestamp column from being downloaded. (hiding it isn't enough) (timestamps cause issues with the other programs).
 
 
 # License

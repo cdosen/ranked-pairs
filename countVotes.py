@@ -1,11 +1,11 @@
 import sys
-import csv
+import ast
 
 def ballotToInt(ballot):
     for voter in range(len(ballot)):
         for cand in range(len(ballot[voter])):
             try:
-                ballot[voter][cand] = int(ballot[voter][cand].strip(' \'[]'))
+                ballot[voter][cand] = ast.literal_eval(ballot[voter][cand])
             except ValueError:
                 ballot[voter][cand] = 0
 
@@ -28,7 +28,7 @@ def makesCycle(newEdge, graph, visited):
     if newEdge[0] in visited or newEdge[1] in visited:
         return True
     # add current node to visited set
-    newVisit = visited | set([newEdge[0]])
+    newVisit = visited | set(newEdge[0])
     # recurse through the graph
     result = False
     for node in graph[(newEdge[1])]:
@@ -46,10 +46,10 @@ def findRoots(graph):
         a set of all of the roots of the graph
     '''
     rootSet = set(graph.keys())
-    nonRoot = set([])
+    nonRoot = set()
     for sets in graph.values():
         nonRoot |= sets
-    rootSet = rootSet - nonRoot
+    rootSet -= nonRoot
     return rootSet
 
 def makeGraph(pairs, nodes):
@@ -71,7 +71,7 @@ def makeGraph(pairs, nodes):
     # populate the graph with edges
     for pair in pairs:
         if (not makesCycle(pair, graph, set([]))) and pair[2] != 0:
-            graph[pair[0]] = graph[pair[0]] | set([pair[1]])
+            graph[pair[0]].add(pair[1])
     return graph
 
 def partition(dataList, low, high):
@@ -204,7 +204,11 @@ class Votes:
             self.voteData[person] = {}
             for opponent in header:
                 self.voteData[person][opponent] = 0
-        ballotToInt(rawData)
+        '''
+        for voter in range(len(rawData)):
+            for cand in range(len(rawData[voter])):
+                rawData[voter][cand] = ast.literal_eval(rawData[voter][cand])
+        '''
         for voter in range(len(rawData)):
             for person in range(len(rawData[voter])):
                 for opponent in range(len(rawData[voter])):
@@ -225,7 +229,7 @@ class Votes:
                 log.write(person + "\n")
             log.write("\n\nPairs in order, with margin of victory and votes for loser:\n\n")
             for pair in self.sortedPairs:
-                log.write(str(pair) + "\n")
+                print(pair, file=log)
             log.write("\n\nPotential Errors:\n\n")
             for line in self.errorLog:
                 log.write(line + "\n")
@@ -257,22 +261,14 @@ if __name__ == "__main__":
     else:
         filename = ""
     with open(votes, 'r') as votecsv:
-        header = votecsv.readline()
-        header = header.strip().split(',')
-        for i in range(len(header)):
-            header[i] = header[i].strip()
-        data = votecsv.readline()
-        data = [data.strip().split(',')]
+        header = ast.literal_eval(votecsv.readline())
+        data = [ast.literal_eval(votecsv.readline())]
         line = votecsv.readline()
-        line = line.strip().split(',')
-        while line != ['']:
+        while line != '':
+            line = ast.literal_eval(line)
             data.append(line)
             line = votecsv.readline()
-            line = line.strip().split(',')
     with open(candidates, 'r') as cand:
-        candList = cand.readline()
-        candList = candList.strip().split(',')
-        for i in range(len(candList)):
-            candList[i] = candList[i].strip()
+        candList = ast.literal_eval(cand.readline())
     election = Votes()
     election.process(data,header,candList,filename)

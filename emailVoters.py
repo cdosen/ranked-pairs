@@ -68,12 +68,12 @@ def verify_internet_access():
     host = "8.8.8.8" # Google
     #Windows OS
     if(os.name == "nt"):
-        output = subprocess.Popen(["ping.exe",host],stdout = subprocess.PIPE).communicate()[0]
+        output = subprocess.Popen(["ping.exe",host],stdout = subprocess.PIPE, universal_newlines=True).communicate()[0]
         if("0% loss" not in str(output)):
             success = False
     # UNIX
     else:
-        output = subprocess.Popen(['ping', '-c 1 -W 1 ', host], stdout=subprocess.PIPE).communicate()[0]
+        output = subprocess.Popen(['ping', '-c 1 -W 1 ', host], stdout=subprocess.PIPE, universal_newlines=True).communicate()[0]
         if("0% packet loss" not in output):
             success = False
     if(success == False):
