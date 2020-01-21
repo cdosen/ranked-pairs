@@ -1,5 +1,6 @@
 import sys
 import ast
+import re
 # If a voter ID is invalid, overwrite it with an error message and blacklist the vote
 def identify_invalid_votes(votes, ids):
 
@@ -58,13 +59,17 @@ if __name__ == "__main__":
     except:
         usage()
     with open(data, 'r') as votecsv:
-        votes = '[\'' + votecsv.readline().strip().replace(',','\',\'')
-        votes = votes + '\']'
+        votes = '[\"' + votecsv.readline().strip(' \'\"\n')
+        votes = votes  + '\"]'
+        votes = re.sub('(?<!\"),','\",', votes)
+        votes = re.sub('(?!,\"),',',\"', votes)
         votes = [ast.literal_eval(votes)]
-        line = ast.literal_eval('['+votecsv.readline().replace(',,',',0,').strip()+']')
+        lineTmp = '['+votecsv.readline().replace(',,',',0,').strip()+']'
+        line = ast.literal_eval(lineTmp.replace('[,', '[0,').replace(',]', ',0]'))
         while line != []:
             votes.append(line)
-            line = ast.literal_eval('['+votecsv.readline().replace(',,',',0,').strip()+']')
+            lineTmp = '['+votecsv.readline().replace(',,',',0,').strip()+']'
+            line = ast.literal_eval(lineTmp.replace('[,', '[0,').replace(',]', ',0]'))
     try:
         idFile = sys.argv[2]
     except:
