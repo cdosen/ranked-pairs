@@ -53,7 +53,7 @@ Credit for the code used to emailVoters goes to Jordan Bonilla. The security and
     - Suggested survey options: shuffle row order, disable all confirmation page links
     - hide show summary of responses
     - the voter id input box must have the phrase "voter id" contained within the title of it. it is not case sensitive
-    - Do not include backslashes in any text on the form.
+    - DO NOT INCLUDE COMMAS IN ANY TEXT ON THE FORM.
     - Do not allow users to edit their responses. This can cause problems if they fill it out once, change their minds and fill out again (to change their vote) (but on a different account or other plausible scenario), and then change their mind again and edit the first vote.
     - After the form is set up, go to the linked response spreadsheet (create it if it doesn't already exist). Add a new sheet, and make sure it has more rows and columns than you could possibly need to hold all the data. In each cell of this new sheet, type "=" and then navigate to the original sheet and click on the cell in the corresponding row, but one column to the right. Use this copy sheet to download the results. This will prevent the timestamp column from being downloaded. (hiding it isn't enough) (timestamps cause issues with the other programs).
 
