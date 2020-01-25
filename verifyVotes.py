@@ -65,6 +65,7 @@ if __name__ == "__main__":
         votes = re.sub('(?!,\"),',',\"', votes)
         votes = [ast.literal_eval(votes)]
         lineTmp = '['+votecsv.readline().replace(',,',',0,').strip()+']'
+        lineTmp = lineTmp.replace(',,',',0,') # Prevents ',,,' from being ',0,,'
         line = ast.literal_eval(lineTmp.replace('[,', '[0,').replace(',]', ',0]'))
         while line != []:
             votes.append(line)
