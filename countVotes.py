@@ -165,7 +165,7 @@ class Votes:
         if len(rootSet) == 1:
             self.victor = str(rootSet)
         else:
-            self.victor = "Tie"
+            self.victor = "Tie between " + str(rootSet)
 
     def orderPairs(self):
         self.sortedPairs = sortPairs(self.pairs)
@@ -240,7 +240,11 @@ class Votes:
         self.importCand(candList)
         self.createPairs()
         self.orderPairs()
-        self.findVictor()
+        try:
+            self.findVictor()
+        except ValueError:
+            self.victor = "Tie"
+            self.errorLog.append("No Preference in data between ANY candidates")
         if file != "":
             self.report(file)
         else:
